@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import LandingPage from "./pages/Landing/Landing";
 import Home from "./pages/Home/Home";
 
@@ -14,9 +15,9 @@ function App() {
   }, []);
 
   return (
-    <>
+    <BrowserRouter>
       {showLanding ? <LandingPage /> : <Home />}
-    </>
+    </BrowserRouter>
   );
 }
 
