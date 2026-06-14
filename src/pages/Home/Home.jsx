@@ -1,19 +1,23 @@
-import Navbar from "../../components/Navbar/Navbar";
 import Hero from "../../components/Hero/Hero";
+import CollectionsPreview from "../../components/CommunityPreview/CommunityPreview";
+import BestSellers from "../../components/BestSellers/BestSellers";
+import FounderStory from "../../components/FounderStory/FounderStory";
+import Footer from "../../components/Footer/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#FEFDE4] text-[#3C2F28]">
-      <div className="bg-[#ffe4ec] text-center text-xs uppercase tracking-[0.3em] text-[#9c4566]">
+    <div className="min-h-screen bg-[#FEFDE4] text-[#6D442C]">
+      {/* Pink Free Shipping Banner Announcement Row */}
+      <div className="bg-[#ffe4ec] text-center text-xs uppercase tracking-[0.3em] text-[#6D442C]">
         <p className="py-2">💗 free shipping on orders above 699 💗</p>
       </div>
 
-      <Navbar />
+      {/* Main Section Content Elements Layout */}
       <Hero />
-
-      <main className="px-4 py-8 sm:px-6">
-        <h1 className="text-3xl font-bold text-[#3C2F28]">Home Page</h1>
-      </main>
+      <CollectionsPreview />
+      <BestSellers />
+      <FounderStory />
+      <Footer />
     </div>
   );
 }

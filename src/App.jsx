@@ -1,7 +1,18 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter } from "react-router-dom";
-import LandingPage from "./pages/Landing/Landing";
-import Home from "./pages/Home/Home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from "./context/CartContext.jsx"; // 🛒 1. IMPORT YOUR NEW CART CONTEXT PROVIDER
+
+// Layout and Main Wrapper
+import Navbar from "./components/Navbar/Navbar.jsx"; 
+
+// Pages
+import LandingPage from "./pages/Landing/Landing.jsx";
+import Home from "./pages/Home/Home.jsx";
+import Collections from "./pages/Collections/Collections.jsx";
+import Community from "./pages/Community/Community.jsx";
+import About from "./pages/About/About.jsx";
+import Contact from "./pages/Contact/Contact.jsx";
+import Cart from "./pages/Cart/Cart.jsx";
 
 function App() {
   const [showLanding, setShowLanding] = useState(true);
@@ -14,10 +25,29 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  // 1. Show the isolated landing page for the first 5 seconds
+  if (showLanding) {
+    return <LandingPage />;
+  }
+
+  // 2. Once the landing page finishes, render the core application routing with the Navbar
+  // 🌟 FIX: Wrap everything inside <CartProvider> so context hooks like useCart() can execute safely!
   return (
-    <BrowserRouter>
-      {showLanding ? <LandingPage /> : <Home />}
-    </BrowserRouter>
+    <CartProvider>
+      <BrowserRouter>
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/collections" element={<Collections />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+        </main>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 

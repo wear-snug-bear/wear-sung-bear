@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
+import PageGlow from "../../components/PageGlow/PageGlow";
 // Importing the new combined asset containing both the bear and the font text style
 import snugbearImage from "../../assets/images/snugbear.png";
 
 export default function LandingPage() {
   return (
     <section className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#FEFDE4]">
+      <PageGlow />
       
       <motion.img
         src={snugbearImage}

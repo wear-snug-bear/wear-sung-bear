@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Reset default body margin and ensure full-height pages */
+html, body, #root {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	background-color: #FEFDE4;
+}
+
+/* Keep Tailwind base utilities available */
