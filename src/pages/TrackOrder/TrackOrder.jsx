@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
 
 export default function TrackOrder() {
   const [email, setEmail] = useState("");
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
 
   const fetchOrders = async () => {
+    if (!email) return;
     setLoading(true);
+    setSearched(true);
     try {
       const response = await fetch(`http://127.0.0.1:5000/api/orders/${email}`);
       const data = await response.json();
@@ -34,16 +36,15 @@ export default function TrackOrder() {
           </button>
         </div>
 
-        {/* Display Orders */}
-        {orders.length > 0 ? (
-          orders.map((order, index) => (
-            <div key={index} className="bg-white p-6 rounded-2xl border border-[#6D442C]/10 mb-4">
-              <p className="font-black text-[#4D3A2A]">Order #{index + 1}</p>
-              <p className="text-sm text-[#7A6B5C]">Total: ₹{order.total} | Payment: {order.paymentMethod}</p>
-              <p className="text-xs text-[#FF8580] font-bold mt-2">Status: Processing ⏳</p>
-            </div>
-          ))
-        ) : !loading && <p>No orders found for this email.</p>}
+        {loading ? <p>Searching...</p> : searched && orders.length === 0 ? <p>No orders found for this email.</p> : null}
+        
+        {orders.map((order, index) => (
+          <div key={index} className="bg-white p-6 rounded-2xl border border-[#6D442C]/10 mb-4">
+            <p className="font-black text-[#4D3A2A]">Order ID: {order.order_id}</p>
+            <p className="text-sm text-[#7A6B5C]">Total: ₹{order.total} | Email: {order.email}</p>
+            <p className="text-xs text-[#FF8580] font-bold mt-2">Status: Processing ⏳</p>
+          </div>
+        ))}
       </div>
     </div>
   );

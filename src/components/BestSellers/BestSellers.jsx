@@ -102,15 +102,18 @@ export default function BestSellers() {
               </div>
 
               {/* Shop Now Action Trigger */}
-              <div className="mt-4">
-                <Link
-                  to={`/product/${product.id}`}
-                  className="inline-flex w-full h-9 items-center justify-center gap-1 rounded-xl bg-[#6D442C] text-[11px] font-bold tracking-wider uppercase text-[#FFF9F6] transition-colors hover:bg-[#FF8580]"
-                >
-                  <span>Shop Now</span>
-                  <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-                </Link>
-              </div>
+              {/* Shop Now Action Trigger */}
+<div className="mt-4">
+  <Link
+    // Navigate to the collections page, optionally passing a query parameter 
+    // to filter by the product's collection name if you have that data
+    to={`/collections?filter=${encodeURIComponent(product.collectionName || "All Collections")}`}
+    className="inline-flex w-full h-9 items-center justify-center gap-1 rounded-xl bg-[#6D442C] text-[11px] font-bold tracking-wider uppercase text-[#FFF9F6] transition-colors hover:bg-[#FF8580]"
+  >
+    <span>Shop Now</span>
+    <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
+  </Link>
+</div>
             </div>
           ))}
         </div>
