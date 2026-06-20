@@ -3,31 +3,33 @@ from flask_cors import CORS
 import os
 import uuid
 import smtplib
-from datetime import datetime
+from datetime import datetime, timezone
 from email.message import EmailMessage
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
-# Load environment variables (ensure your .env file is in the backend folder)
+# Load environment variables
 load_dotenv()
-
+print(f"DEBUG: Email User loaded: {os.getenv('EMAIL_USER')}")
+print(f"DEBUG: Email Pass loaded: {bool(os.getenv('EMAIL_PASS'))}") 
+# --------------------------------
 app = Flask(__name__)
 CORS(app)
 
 # --- Database Setup ---
 mongo_uri = os.getenv("MONGO_URI")
 
+# We use direct connection settings to bypass common network handshake issues
 client = MongoClient(
     mongo_uri,
     tls=True,
-    tlsAllowInvalidCertificates=True, # Bypasses strict cert validation
-    tlsAllowInvalidHostnames=True,   # Bypasses hostname checking
-    serverSelectionTimeoutMS=5000,   # Shorter timeout to fail fast
-    connectTimeoutMS=10000,
-    socketTimeoutMS=10000
+    tlsAllowInvalidCertificates=True,  # Bypasses the ISP certificate interference
+    tlsAllowInvalidHostnames=True,     # Bypasses the ISP hostname interference
+    serverSelectionTimeoutMS=30000,
+    connectTimeoutMS=30000,
+    socketTimeoutMS=30000
 )
 
-# Test the connection immediately on startup
 try:
     client.admin.command('ping')
     print("Connection to MongoDB established successfully!")
@@ -36,12 +38,15 @@ except Exception as e:
 
 db = client['snugbear_db']
 
-# --- Configuration ---
-EMAIL_ADDRESS = os.getenv('EMAIL_USER', 'ruhela.kritika777@gmail.com')
-EMAIL_PASSWORD = os.getenv('EMAIL_PASS', 'rgahdwwyyeoifmvo')
+# --- Email Configuration ---
+# Ensure these match the variables in your .env file exactly
+EMAIL_ADDRESS = os.getenv('EMAIL_USER')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASS')
 
 def send_order_confirmation(user_email, order_id):
-    if not user_email: return
+    if not user_email or not EMAIL_ADDRESS or not EMAIL_PASSWORD:
+        print("Skipping email: Missing email configuration or recipient.")
+        return
     
     msg = EmailMessage()
     msg['Subject'] = 'Order Confirmed! - Snugbear Store 🧸'
@@ -60,13 +65,19 @@ def send_order_confirmation(user_email, order_id):
     msg.add_alternative(html_content, subtype='html')
     
     try:
+        # Using Gmail's standard SMTP port 465
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             smtp.send_message(msg)
+            print(f"Confirmation email sent to {user_email}")
     except Exception as e:
         print(f"SMTP Error: {e}")
 
 # --- Routes ---
+
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({"message": "Snugbear Backend is running!"})
 
 @app.route('/api/products', methods=['GET'])
 def get_products():
@@ -78,10 +89,10 @@ def checkout():
     order = request.get_json()
     if not order: return jsonify({"error": "No data"}), 400
     
-    # Adding metadata for professional management
     order['order_id'] = str(uuid.uuid4())[:8]
     order['status'] = 'Processing'
-    order['created_at'] = datetime.utcnow()
+    # Fixed the DeprecationWarning here:
+    order['created_at'] = datetime.now(timezone.utc)
     
     db.orders.insert_one(order)
     send_order_confirmation(order.get('email'), order['order_id'])
@@ -90,13 +101,11 @@ def checkout():
 
 @app.route('/api/orders/<email>', methods=['GET'])
 def get_orders_by_email(email):
-    # Sorting by date (newest first)
     user_orders = list(db.orders.find({"email": {"$regex": email, "$options": "i"}}, {'_id': 0}).sort("created_at", -1))
     return jsonify(user_orders)
 
 @app.route('/api/admin/orders', methods=['GET'])
 def get_all_orders():
-    # Fetch all orders sorted by date
     orders = list(db.orders.find({}, {'_id': 0}).sort("created_at", -1))
     return jsonify(orders)
 
