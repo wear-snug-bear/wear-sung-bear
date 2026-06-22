@@ -495,8 +495,15 @@ export default function Collections() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://snugbear-backend.onrender.com/api/products");
+        // Replace this line:
+// const response = await fetch("https://snugbear-backend.onrender.com/api/products");
 
+// With this:
+const API_BASE_URL = window.location.hostname === "localhost" 
+  ? "http://localhost:5000" // Pointing to your local Flask server
+  : "https://snugbear-backend.onrender.com"; // Your live Render URL
+
+const response = await fetch(`${API_BASE_URL}/api/products`);
         if (!response.ok) throw new Error(`Server returned ${response.status}`);
 
         const data = await response.json();
