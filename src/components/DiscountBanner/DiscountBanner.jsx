@@ -1,41 +1,46 @@
 import React, { useState, useEffect } from 'react';
 
-// The array is ordered: Light (#ffe4ec), Dark (#6D442C), Light (#ffe4ec), Dark (#6D442C)
 const discounts = [
-  { text: "🕒 Flash Sale: Grab These Cutesy Styles Before They're Gone! 🎀", bg: "#ffe4ec", color: "#6D442C" },
+  { text: "🕒 Flash Sale: Grab These Cutesy Styles! 🎀", bg: "#ffe4ec", color: "#6D442C" },
   { text: "✨ Buy 2, Get 10% Off Your Favorite Finds! 🧸", bg: "#6D442C", color: "#ffffff" },
   { text: "💗 Free Shipping On Orders Above 699 💗", bg: "#ffe4ec", color: "#6D442C" },
-  { text: "💌 Join Our Newsletter & Get 10% Off Your First Order! 🍯", bg: "#6D442C", color: "#ffffff" },
+  { text: "💌 Get 10% Off Your First Order! 🍯", bg: "#6D442C", color: "#ffffff" },
 ];
 
 export default function DiscountBanner() {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    // Cycles every 2 seconds
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % discounts.length);
-    }, 2000); 
+    }, 4000); 
     
     return () => clearInterval(timer);
   }, []);
 
   return (
     <div 
-      className="text-center text-xs uppercase tracking-[0.3em] py-3 transition-colors duration-500 overflow-hidden"
-      // Apply background and color dynamically based on current index
-      style={{ backgroundColor: discounts[index].bg, color: discounts[index].color }}
+      className="w-full py-3 transition-colors duration-700 ease-in-out flex items-center justify-center overflow-hidden"
+      style={{ backgroundColor: discounts[index].bg }}
     >
-      {/* Key is set to index so that the animation re-triggers on every change */}
-      <p key={index} className="animate-slide-in">
-        {discounts[index].text}
-      </p>
+      {/* The parent div (w-full overflow-hidden) ensures that even if 
+        the text moves, it stays within the screen edges.
+      */}
+      <div className="w-full flex justify-center items-center overflow-hidden relative h-6">
+        <p 
+          key={index} 
+          className="animate-slide-left absolute whitespace-nowrap font-bold uppercase tracking-[0.1em] sm:tracking-[0.25em] text-[10px] sm:text-[11px] md:text-xs px-4"
+          style={{ color: discounts[index].color }}
+        >
+          {discounts[index].text}
+        </p>
+      </div>
       
       <style jsx>{`
-        .animate-slide-in {
-          animation: slide 0.5s ease-out;
+        .animate-slide-left {
+          animation: slideLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes slide {
+        @keyframes slideLeft {
           from { transform: translateX(100%); opacity: 0; }
           to { transform: translateX(0); opacity: 1; }
         }
