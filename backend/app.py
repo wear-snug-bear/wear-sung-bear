@@ -14,7 +14,7 @@ print(f"DEBUG: Email User loaded: {os.getenv('EMAIL_USER')}")
 print(f"DEBUG: Email Pass loaded: {bool(os.getenv('EMAIL_PASS'))}") 
 # --------------------------------
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://snug-bear.netlify.app/"])
 
 # --- Database Setup ---
 mongo_uri = os.getenv("MONGO_URI")
@@ -58,7 +58,7 @@ def send_order_confirmation(user_email, order_id):
       <body style="font-family: sans-serif; color: #4D3A2A;">
         <h2>Yay! Your Snuggles are on the way! 🧸</h2>
         <p>Your order (ID: <strong>{order_id}</strong>) has been placed successfully.</p>
-        <a href="http://localhost:5173/track-order" style="background: #6D442C; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">Track Order</a>
+        <a href="https://snug-bear.netlify.app/track-order" style="background: #6D442C; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">Track Order</a>
       </body>
     </html>
     """
