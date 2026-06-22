@@ -14,7 +14,7 @@ print(f"DEBUG: Email User loaded: {os.getenv('EMAIL_USER')}")
 print(f"DEBUG: Email Pass loaded: {bool(os.getenv('EMAIL_PASS'))}") 
 # --------------------------------
 app = Flask(__name__)
-CORS(app, origins=["https://snug-bear.netlify.app/"])
+CORS(app, resources={r"/api/*": {"origins": "https://snug-bear.netlify.app"}})
 
 # --- Database Setup ---
 mongo_uri = os.getenv("MONGO_URI")
