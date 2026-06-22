@@ -21,7 +21,7 @@ export default function Navbar() {
           </svg>
         </button>
 
-        {/* Logo Left */}
+        {/* Logo */}
         <Link to="/" className="z-10 flex items-center">
           <img src={logo} alt="SnugBear Logo" className="h-auto w-32 sm:w-40 md:w-52 object-fill" />
         </Link>
@@ -35,12 +35,8 @@ export default function Navbar() {
           <Link to="/contact" className="transition hover:text-[#7A5A3A]">Contact</Link>
         </nav>
 
-        {/* Action Controls Right */}
-        <div className="z-10 flex items-center gap-3">
-          <button className="hidden sm:inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#F7EFE2] text-[#4D3A2A] transition hover:bg-[#E6D4C3]">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </button>
-
+        {/* Cart Icon Right */}
+        <div className="z-10 flex items-center">
           <Link to="/cart" className="relative inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#F7EFE2] text-[#4D3A2A] transition hover:bg-[#E6D4C3]">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
             {totalItemsCount > 0 && (
